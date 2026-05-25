@@ -13,9 +13,6 @@
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-  <!-- Lucide Icons script -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-
   <style>
     /* Custom scrollbar for premium feel */
     ::-webkit-scrollbar {
@@ -33,19 +30,13 @@
     }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans">
+<body class="bg-slate-950 text-slate-100 font-sans antialiased">
 
   <div id="root"></div>
 
   <!-- React Code -->
   <script type="text/babel">
     const { useState, useEffect, useMemo } = React;
-
-    /**
-     * CONFIGURATION:
-     * Replace this URL with your published Google Sheet CSV link.
-     */
-    const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQOu9SwiZI79BtjV_NbFGJav8AvRoJwfFPN-MkCHd93chVWkiro2frbORtGbBfRZk4xYLqSXJcMaHj5/pub?gid=0&single=true&output=csv"; 
 
     // FUNNY TITLES based on Level
     const GET_TITLE = (level) => {
@@ -57,85 +48,150 @@
       return "Unwashed Peasant";
     };
 
-    // FALLBACK AVATAR STYLE: 'bottts', 'pixel-art', 'adventurer', 'big-smile'
     const AVATAR_STYLE = 'adventurer';
 
-    // Simple SVG Icons to replace lucide-react dependencies safely inside the single-file setup
+    // SVG Icons
     const Icons = {
       Shield: () => (
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-shield"><path d="M20 13c0 5-3.5 7.5-7.66 9.7a1 1 0 0 1-.68 0C7.5 20.5 4 18 4 13V6a1 1 0 0 1 .76-.97l8-2a1 1 0 0 1 .48 0l8 2A1 1 0 0 1 20 6z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 9.7a1 1 0 0 1-.68 0C7.5 20.5 4 18 4 13V6a1 1 0 0 1 .76-.97l8-2a1 1 0 0 1 .48 0l8 2A1 1 0 0 1 20 6z"/></svg>
       ),
       Trophy: () => (
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-trophy text-yellow-500"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.45 1-1 1H4v2h16v-2h-5c-.55 0-1-.45-1-1v-2.34"/><path d="M12 2a6 6 0 0 1 6 6v1a6 6 0 0 1-12 0V8a6 6 0 0 1 6-6z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-yellow-500"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.45 1-1 1H4v2h16v-2h-5c-.55 0-1-.45-1-1v-2.34"/><path d="M12 2a6 6 0 0 1 6 6v1a6 6 0 0 1-12 0V8a6 6 0 0 1 6-6z"/></svg>
       ),
       Crown: () => (
-        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-crown text-yellow-500/20 rotate-12"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-yellow-500/20 rotate-12"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>
       ),
       Sparkles: () => (
-        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-sparkles"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
       ),
       Zap: () => (
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-zap text-orange-500"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-orange-500"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
       ),
       CheckCircle2: () => (
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-check-circle-2"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
       ),
       User: () => (
-        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       ),
       RefreshCw: ({ className }) => (
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`lucide lucide-refresh-cw ${className}`}><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/></svg>
+      ),
+      Settings: () => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
       )
     };
 
+    // Rich Interactive Demo Data
+    const DEMO_CHORES = [
+      { name: "Dad", task: "Empty Dishwasher", points: 50, category: "Kitchen", status: "Available", type: "Daily", customAvatar: "" },
+      { name: "Mom", task: "Vacuum Living Room", points: 150, category: "Cleaning", status: "Completed", type: "Weekly", customAvatar: "" },
+      { name: "Kid 1", task: "Feed the Pets", points: 40, category: "Pets", status: "Available", type: "Daily", customAvatar: "" },
+      { name: "Kid 2", task: "Take out Trash & Recycling", points: 100, category: "Outside", status: "Available", type: "Weekly", customAvatar: "" },
+      { name: "Kid 1", task: "Fold Laundry Pile", points: 200, category: "Laundry", status: "Completed", type: "Weekly", customAvatar: "" },
+      { name: "Mom", task: "Wipe Down Kitchen Counters", points: 50, category: "Kitchen", status: "Available", type: "Daily", customAvatar: "" },
+      { name: "Kid 2", task: "Set Dinner Table", points: 30, category: "Kitchen", status: "Available", type: "Daily", customAvatar: "" }
+    ];
+
     const App = () => {
+      // Load configuration from localStorage to persist across updates
+      const [sheetUrl, setSheetUrl] = useState(() => {
+        return localStorage.getItem('chorequest_sheet_url') || "";
+      });
+      const [isDemoMode, setIsDemoMode] = useState(() => {
+        return localStorage.getItem('chorequest_demo_mode') !== 'false'; // Default to true if not set
+      });
+
       const [data, setData] = useState([]);
       const [loading, setLoading] = useState(true);
       const [error, setError] = useState(null);
       const [lastUpdated, setLastUpdated] = useState(new Date());
+      const [showSettings, setShowSettings] = useState(false);
+      const [localUrlInput, setLocalUrlInput] = useState(sheetUrl);
 
-      const fetchData = async () => {
-        if (!SHEET_CSV_URL) return;
+      const fetchData = async (currentUrl = sheetUrl, forceDemo = isDemoMode) => {
+        if (forceDemo || !currentUrl) {
+          setData(DEMO_CHORES);
+          setLoading(false);
+          setError(null);
+          return;
+        }
+
         try {
           setLoading(true);
-          const response = await fetch(SHEET_CSV_URL);
+          const response = await fetch(currentUrl);
+          if (!response.ok) throw new Error("Network response was not ok");
           const text = await response.text();
           
-          const rows = text.split('\n').slice(1);
+          // Resilient CSV parser split by carriage returns or new lines
+          const rows = text.split(/\r?\n/).slice(1);
           const parsed = rows.map(row => {
-            const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/); // Regex to handle potential commas inside quotes safely
+            if (!row.trim()) return null;
+            // Split on comma only outside quotes
+            const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
             return {
-              name: cols[0]?.replace(/^"|"$/g, '').trim(),
-              task: cols[1]?.replace(/^"|"$/g, '').trim(),
+              name: cols[0]?.replace(/^"|"$/g, '').trim() || "Unknown Hero",
+              task: cols[1]?.replace(/^"|"$/g, '').trim() || "",
               points: parseInt(cols[2]?.trim()) || 0,
-              category: cols[3]?.replace(/^"|"$/g, '').trim(),
-              status: cols[4]?.replace(/^"|"$/g, '').trim(),
-              type: cols[5]?.replace(/^"|"$/g, '').trim(),
-              customAvatar: cols[6]?.replace(/^"|"$/g, '').trim()
+              category: cols[3]?.replace(/^"|"$/g, '').trim() || "General",
+              status: cols[4]?.replace(/^"|"$/g, '').trim() || "Available",
+              type: cols[5]?.replace(/^"|"$/g, '').trim() || "Daily",
+              customAvatar: cols[6] ? cols[6].replace(/^"|"$/g, '').trim() : ""
             };
-          }).filter(item => item.task);
+          }).filter(item => item && item.task);
+
+          if (parsed.length === 0) {
+            throw new Error("No valid chore records parsed from sheet. Check column formatting!");
+          }
 
           setData(parsed);
+          setError(null);
           setLastUpdated(new Date());
           setLoading(false);
         } catch (err) {
-          setError("Failed to sync. Check your CSV URL or sharing settings.");
+          console.error("Fetch error:", err);
+          setError(
+            "Sync failed! We are falling back to interactive Demo Mode. Please check that your Google Sheet is fully 'Published to Web' as a CSV and the URL is correct."
+          );
+          setData(DEMO_CHORES); // Fallback so screen is never blank
           setLoading(false);
         }
       };
 
+      // Handle config updates
+      const saveSettings = (e) => {
+        e.preventDefault();
+        const cleanUrl = localUrlInput.trim();
+        localStorage.setItem('chorequest_sheet_url', cleanUrl);
+        setSheetUrl(cleanUrl);
+        
+        const demoState = !cleanUrl;
+        localStorage.setItem('chorequest_demo_mode', demoState);
+        setIsDemoMode(demoState);
+        
+        setShowSettings(false);
+        fetchData(cleanUrl, demoState);
+      };
+
+      const toggleDemoMode = (val) => {
+        setIsDemoMode(val);
+        localStorage.setItem('chorequest_demo_mode', val);
+        fetchData(sheetUrl, val);
+      };
+
       useEffect(() => {
         fetchData();
-        const interval = setInterval(fetchData, 300000); // Auto-update every 5 minutes
+        const interval = setInterval(() => fetchData(), 300000); // Sync every 5 minutes
         return () => clearInterval(interval);
-      }, []);
+      }, [sheetUrl, isDemoMode]);
 
+      // Calculate Player statistics
       const players = useMemo(() => {
         const stats = {};
         data.forEach(item => {
-          if (!stats[item.name]) {
-            stats[item.name] = { 
-              name: item.name, 
+          const playerName = item.name || "Unknown";
+          if (!stats[playerName]) {
+            stats[playerName] = { 
+              name: playerName, 
               xp: 0, 
               completed: 0, 
               level: 1, 
@@ -143,97 +199,219 @@
             };
           }
           if (item.status === "Completed") {
-            stats[item.name].xp += item.points;
-            stats[item.name].completed += 1;
-            stats[item.name].level = Math.floor(stats[item.name].xp / 500) + 1;
+            stats[playerName].xp += item.points;
+            stats[playerName].completed += 1;
+            stats[playerName].level = Math.floor(stats[playerName].xp / 500) + 1;
           }
         });
         return Object.values(stats).sort((a, b) => b.xp - a.xp);
       }, [data]);
 
+      // Toggle item complete instantly in UI
       const toggleStatus = (index) => {
         const newData = [...data];
-        newData[index].status = newData[index].status === "Completed" ? "Available" : "Completed";
+        const oldStatus = newData[index].status;
+        newData[index].status = oldStatus === "Completed" ? "Available" : "Completed";
         setData(newData);
+        
+        // Show a brief reminder tooltip/alert for first time users that Google Sheets are read-only
+        if (!isDemoMode) {
+          console.log("Local UI updated. Note: Google Sheets updates require a custom Apps Script Webhook. Re-syncs will load latest sheet values.");
+        }
       };
 
       return (
-        <div className="min-h-screen bg-slate-950 text-slate-100 p-4 md:p-8 font-sans">
-          <header className="flex flex-col md:flex-row justify-between items-center mb-10 gap-4">
+        <div className="min-h-screen bg-slate-950 text-slate-100 p-4 md:p-8 font-sans transition-all duration-300">
+          <header className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
             <div className="flex items-center gap-3">
               <div className="p-3 bg-indigo-600 rounded-2xl shadow-lg shadow-indigo-500/20">
                 <Icons.Shield />
               </div>
               <div>
-                <h1 className="text-3xl font-black tracking-tight text-white uppercase italic">ChoreQuest</h1>
-                <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">The Household RPG</p>
+                <h1 className="text-3xl font-black tracking-tight text-white uppercase italic flex items-center gap-2">
+                  ChoreQuest 
+                  <span className="text-xs bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 font-bold tracking-widest uppercase px-2 py-0.5 rounded-full not-italic">
+                    v2.5
+                  </span>
+                </h1>
+                <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">Household RPG Panel</p>
               </div>
             </div>
             
-            <div className="flex items-center gap-4 bg-slate-900/50 p-2 rounded-xl border border-slate-800">
-              <div className="text-right px-2">
-                <p className="text-[10px] text-slate-500 uppercase font-bold">Auto-Syncing</p>
-                <p className="text-xs text-slate-300 font-mono">{lastUpdated.toLocaleTimeString()}</p>
+            <div className="flex items-center gap-2 flex-wrap justify-center">
+              {isDemoMode ? (
+                <span className="bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[10px] font-black uppercase tracking-wider px-3 py-1.5 rounded-lg flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                  Demo Mode Active
+                </span>
+              ) : (
+                <span className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-black uppercase tracking-wider px-3 py-1.5 rounded-lg flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                  Connected to Sheet
+                </span>
+              )}
+
+              <div className="flex items-center gap-2 bg-slate-900/60 p-1.5 rounded-xl border border-slate-800">
+                <button 
+                  onClick={() => setShowSettings(!showSettings)} 
+                  title="Configure Google Sheet Link"
+                  className="p-2 hover:bg-slate-800 rounded-lg transition-colors text-slate-400 hover:text-white"
+                >
+                  <Icons.Settings />
+                </button>
+                <button 
+                  onClick={() => fetchData()} 
+                  title="Force Refresh Data"
+                  className="p-2 hover:bg-slate-800 rounded-lg transition-colors text-indigo-400 hover:text-indigo-300"
+                >
+                  <Icons.RefreshCw className={loading ? 'animate-spin' : ''} />
+                </button>
               </div>
-              <button onClick={fetchData} className="p-2 hover:bg-slate-800 rounded-lg transition-colors text-indigo-400">
-                <Icons.RefreshCw className={loading ? 'animate-spin' : ''} />
-              </button>
             </div>
           </header>
 
+          {/* Quick Setup Settings Panel */}
+          {showSettings && (
+            <div className="mb-8 p-6 bg-slate-900 border-2 border-indigo-500/30 rounded-3xl shadow-2xl relative animate-fadeIn">
+              <h3 className="text-lg font-bold mb-2 flex items-center gap-2">
+                <Icons.Settings /> Configuration Console
+              </h3>
+              <p className="text-sm text-slate-400 mb-4 leading-relaxed">
+                Configure your Google Sheet sync properties here. Ensure your Sheet is published as a CSV format first!
+              </p>
+              
+              <form onSubmit={saveSettings} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
+                    Published Google Sheet CSV URL
+                  </label>
+                  <input 
+                    type="url"
+                    value={localUrlInput}
+                    onChange={(e) => setLocalUrlInput(e.target.value)}
+                    placeholder="https://docs.google.com/spreadsheets/d/e/.../pub?gid=0&single=true&output=csv"
+                    className="w-full bg-slate-950 border border-slate-800 focus:border-indigo-500 outline-none rounded-xl px-4 py-3 text-sm font-mono text-slate-200 transition-colors"
+                  />
+                </div>
+                
+                <div className="flex gap-4 justify-between items-center pt-2">
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setLocalUrlInput("");
+                        setIsDemoMode(true);
+                      }}
+                      className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold rounded-xl transition-colors"
+                    >
+                      Clear & Use Demo Mode
+                    </button>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setShowSettings(false)}
+                      className="px-4 py-2 bg-slate-950 text-slate-400 text-xs font-bold rounded-xl hover:text-white transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-indigo-500/20 transition-all"
+                    >
+                      Save & Try Sync
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          )}
+
+          {/* Error Banner */}
+          {error && (
+            <div className="mb-8 p-4 bg-amber-500/10 border border-amber-500/20 rounded-2xl text-amber-300 text-sm flex flex-col md:flex-row items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <span className="flex-shrink-0 w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping"></span>
+                <span>{error}</span>
+              </div>
+              <button 
+                onClick={() => setShowSettings(true)}
+                className="text-xs bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/30 font-bold px-3 py-1.5 rounded-xl transition-all"
+              >
+                Configure Settings
+              </button>
+            </div>
+          )}
+
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Leaderboard Column */}
             <section className="space-y-6">
               <h2 className="text-xl font-bold flex items-center gap-2 mb-4">
                 <Icons.Trophy /> Leaderboard
               </h2>
-              {players.map((player, idx) => (
-                <div key={player.name} className="relative bg-slate-900 border border-slate-800 rounded-2xl p-5 overflow-hidden group hover:border-indigo-500/30 transition-colors shadow-xl">
-                  {idx === 0 && <Icons.Crown />}
-                  <div className="flex justify-between items-start mb-3 relative z-10">
-                    <div className="flex items-center gap-3">
-                      <div className="relative">
-                        <img 
-                          src={player.avatar && player.avatar.startsWith('http') 
-                            ? player.avatar 
-                            : `https://api.dicebear.com/7.x/${AVATAR_STYLE}/svg?seed=${player.name}`} 
-                          alt={player.name}
-                          className="w-16 h-16 rounded-2xl bg-slate-800 border border-slate-700 object-cover shadow-inner"
-                          onError={(e) => { e.target.src = `https://api.dicebear.com/7.x/${AVATAR_STYLE}/svg?seed=${player.name}`; }}
-                        />
-                        <div className="absolute -bottom-1 -right-1 bg-indigo-600 text-[10px] font-bold px-2 py-0.5 rounded-lg border-2 border-slate-900 shadow-lg">
-                          Lvl {player.level}
+              <div className="space-y-4">
+                {players.map((player, idx) => (
+                  <div key={player.name} className="relative bg-slate-900 border border-slate-800 rounded-2xl p-5 overflow-hidden group hover:border-indigo-500/30 transition-colors shadow-xl">
+                    {idx === 0 && <Icons.Crown />}
+                    <div className="flex justify-between items-start mb-3 relative z-10">
+                      <div className="flex items-center gap-3">
+                        <div className="relative">
+                          <img 
+                            src={player.avatar && player.avatar.startsWith('http') 
+                              ? player.avatar 
+                              : `https://api.dicebear.com/7.x/${AVATAR_STYLE}/svg?seed=${encodeURIComponent(player.name)}`} 
+                            alt={player.name}
+                            className="w-16 h-16 rounded-2xl bg-slate-850 border border-slate-700 object-cover shadow-inner"
+                            onError={(e) => { 
+                              e.target.onerror = null;
+                              e.target.src = `https://api.dicebear.com/7.x/${AVATAR_STYLE}/svg?seed=${encodeURIComponent(player.name)}`; 
+                            }}
+                          />
+                          <div className="absolute -bottom-1 -right-1 bg-indigo-600 text-[10px] font-bold px-2 py-0.5 rounded-lg border-2 border-slate-900 shadow-lg">
+                            Lvl {player.level}
+                          </div>
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-lg leading-tight">{player.name}</h3>
+                          <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-tight flex items-center gap-1 mt-0.5">
+                            <Icons.Sparkles /> {GET_TITLE(player.level)}
+                          </span>
                         </div>
                       </div>
-                      <div>
-                        <h3 className="font-bold text-lg leading-tight">{player.name}</h3>
-                        <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-tight flex items-center gap-1">
-                          <Icons.Sparkles /> {GET_TITLE(player.level)}
-                        </span>
+                      <div className="text-right">
+                        <span className="text-2xl font-black text-white">{player.xp}</span>
+                        <span className="text-[10px] block text-slate-500 font-bold uppercase">XP</span>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <span className="text-2xl font-black text-white">{player.xp}</span>
-                      <span className="text-[10px] block text-slate-500 font-bold uppercase">XP</span>
+                    <div className="space-y-1 relative z-10">
+                      <div className="flex justify-between text-[10px] font-bold uppercase text-slate-500">
+                        <span>EXP Progress</span>
+                        <span>{player.xp % 500} / 500</span>
+                      </div>
+                      <div className="w-full bg-slate-950 h-2 rounded-full overflow-hidden border border-slate-800/55">
+                        <div className="bg-indigo-500 h-full transition-all duration-1000" style={{ width: `${(player.xp % 500) / 5}%` }} />
+                      </div>
                     </div>
                   </div>
-                  <div className="space-y-1 relative z-10">
-                    <div className="flex justify-between text-[10px] font-bold uppercase text-slate-500">
-                      <span>EXP Progress</span>
-                      <span>{player.xp % 500} / 500</span>
-                    </div>
-                    <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
-                      <div className="bg-indigo-500 h-full transition-all duration-1000" style={{ width: `${(player.xp % 500) / 5}%` }} />
-                    </div>
+                ))}
+                
+                {players.length === 0 && (
+                  <div className="text-center py-8 text-slate-500">
+                    No adventurers logged. Add completed chores in sheet to view leaderboard!
                   </div>
-                </div>
-              ))}
+                )}
+              </div>
             </section>
 
+            {/* Quests (Chore cards) */}
             <section className="lg:col-span-2 space-y-6">
               <div className="flex justify-between items-end">
                 <h2 className="text-xl font-bold flex items-center gap-2">
                   <Icons.Zap /> Active Quests
                 </h2>
+                <div className="text-xs text-slate-500">
+                  Total Items: {data.length}
+                </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -247,28 +425,47 @@
                       : 'bg-slate-900 border-slate-800 hover:border-indigo-500/50 hover:bg-slate-800/50 shadow-md'
                     }`}
                   >
-                    <div className={`mr-4 p-3 rounded-xl ${
-                      item.status === 'Completed' ? 'bg-emerald-500 text-white' : 'bg-slate-800 text-slate-500'
+                    <div className={`mr-4 p-3 rounded-xl transition-colors ${
+                      item.status === 'Completed' ? 'bg-emerald-500 text-white animate-scale' : 'bg-slate-850 text-slate-500'
                     }`}>
                       <Icons.CheckCircle2 />
                     </div>
-                    <div className="flex-1">
-                      <div className="flex justify-between">
-                        <span className="text-[10px] font-black uppercase text-slate-500">{item.type} • {item.category}</span>
-                        <span className="text-xs font-bold text-yellow-500">+{item.points} XP</span>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex justify-between items-center mb-0.5 gap-2">
+                        <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded tracking-wider ${
+                          item.type === 'Daily' ? 'bg-orange-500/10 text-orange-400 border border-orange-500/10' : 'bg-blue-500/10 text-blue-400 border border-blue-500/10'
+                        }`}>
+                          {item.type}
+                        </span>
+                        <span className="text-xs font-bold text-yellow-500 flex-shrink-0">+{item.points} XP</span>
                       </div>
-                      <h4 className={`font-bold text-lg ${item.status === 'Completed' ? 'line-through' : ''}`}>
+                      <h4 className={`font-bold text-lg truncate ${item.status === 'Completed' ? 'line-through text-slate-500 font-normal' : 'text-white'}`}>
                         {item.task}
                       </h4>
-                      <div className="text-xs text-slate-500 flex items-center gap-1 mt-1">
-                        <Icons.User /> Assigned to: <span className="text-slate-300">{item.name}</span>
+                      <div className="text-xs text-slate-500 flex items-center gap-2 mt-1 truncate">
+                        <span className="flex items-center gap-1">
+                          <Icons.User /> Assigned to: <strong className="text-slate-300 font-medium">{item.name}</strong>
+                        </span>
+                        <span>•</span>
+                        <span className="text-slate-400">{item.category}</span>
                       </div>
                     </div>
                   </button>
                 ))}
               </div>
+
+              {data.length === 0 && !loading && (
+                <div className="text-center py-20 border-2 border-dashed border-slate-800 rounded-3xl">
+                  <p className="text-slate-500 font-medium">Quest board is empty. Update your spreadsheet to begin!</p>
+                </div>
+              )}
             </section>
           </div>
+
+          <footer className="mt-12 pt-6 border-t border-slate-900/60 flex flex-col md:flex-row justify-between items-center text-slate-600 text-[10px] font-bold uppercase tracking-[0.2em] gap-4">
+            <div>Status: Online • ChoreQuest Protocol v2.5</div>
+            <div className="font-mono">Last Synchronized: {lastUpdated.toLocaleTimeString()}</div>
+          </footer>
         </div>
       );
     };
