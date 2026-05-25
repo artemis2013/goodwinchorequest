@@ -38,6 +38,16 @@
   <script type="text/babel">
     const { useState, useEffect, useMemo } = React;
 
+    /**
+     * ==========================================
+     * CONFIGURATION: Paste your Google Sheet CSV URL here!
+     * ==========================================
+     * Replace the empty string below with your published Google Sheet CSV link.
+     * Example: "https://docs.google.com/spreadsheets/d/e/.../pub?gid=0&single=true&output=csv"
+     * * Leave it as "" to use the interactive Demo Mode by default.
+     */
+    const DEFAULT_SHEET_CSV_URL = https://docs.google.com/spreadsheets/d/e/2PACX-1vQOu9SwiZI79BtjV_NbFGJav8AvRoJwfFPN-MkCHd93chVWkiro2frbORtGbBfRZk4xYLqSXJcMaHj5/pub?output=csv; 
+
     // FUNNY TITLES based on Level
     const GET_TITLE = (level) => {
       if (level >= 10) return "Supreme Overlord of Clean";
@@ -93,12 +103,15 @@
     ];
 
     const App = () => {
-      // Load configuration from localStorage to persist across updates
+      // Load configuration from localStorage to persist across updates, with a hardcoded fallback
       const [sheetUrl, setSheetUrl] = useState(() => {
-        return localStorage.getItem('chorequest_sheet_url') || "";
+        return localStorage.getItem('chorequest_sheet_url') || DEFAULT_SHEET_CSV_URL;
       });
       const [isDemoMode, setIsDemoMode] = useState(() => {
-        return localStorage.getItem('chorequest_demo_mode') !== 'false'; // Default to true if not set
+        const savedDemo = localStorage.getItem('chorequest_demo_mode');
+        if (savedDemo !== null) return savedDemo !== 'false';
+        // If there is no default hardcoded URL, start in Demo Mode
+        return !DEFAULT_SHEET_CSV_URL;
       });
 
       const [data, setData] = useState([]);
